@@ -73,7 +73,7 @@ v${OSTICKET_VERSION}/osTicket-v${OSTICKET_VERSION}.zip; \
     echo "${OSTICKET_SHA256SUM}  osTicket.zip" | sha256sum -c; \
     unzip osTicket.zip 'upload/*'; \
     rm osTicket.zip; \
-    mv upload /var/www/html \
+    mv upload /var/www/html; \
     #mkdir /usr/local/src; \
     #mv upload /usr/local/src/osticket; \
     # Hard link the sources to the public directory
