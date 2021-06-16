@@ -1,4 +1,7 @@
-FROM php:7.4-fpm-alpine3.13
+FROM php:7.4-fpm-alpine
+
+VOLUME /var/lib/osticket
+
 RUN set -ex; \
     \
     export CFLAGS="-Os"; \
@@ -52,11 +55,14 @@ RUN set -ex; \
     chown www-data:www-data /var/log/msmtp.log; \
     \
     # Create data dir
-    mkdir /var/lib/osticket; \
-    \
+    #mkdir /var/lib/osticket; \
+    #\
     # Clean up
     apk del .build-deps; \
     rm -rf /tmp/pear /var/cache/apk/*
+    
+VOLUME /var/www/
+
 # DO NOT FORGET TO UPDATE "tags" FILE
 ENV OSTICKET_VERSION=1.15.2 \
     OSTICKET_SHA256SUM=83c435956f3975eefcc001152ce848bf00f26cdc97305e312b7653d6f843a252
@@ -79,33 +85,6 @@ v${OSTICKET_VERSION}/osTicket-v${OSTICKET_VERSION}.zip; \
         wget -q -O /var/www/html/include/i18n/${lang}.phar \
             https://s3.amazonaws.com/downloads.osticket.com/lang/${lang}.phar; \
     done
-ENV OSTICKET_PLUGINS_VERSION=93d7d6d11670c7eac7a4e432dbc15f40375a70cf \
-    OSTICKET_PLUGINS_SHA256SUM=0d4b60045be607d377a7d27a3d5143d5db36041f992c8924816604a81bb342d6
-RUN set -ex; \
-    \
-    wget -q -O osTicket-plugins.tar.gz https://github.com/devinsolutions/osTicket-plugins/archive/\
-${OSTICKET_PLUGINS_VERSION}.tar.gz; \
-    echo "${OSTICKET_PLUGINS_SHA256SUM}  osTicket-plugins.tar.gz" | sha256sum -c; \
-    tar -xzf osTicket-plugins.tar.gz --one-top-level --strip-components 1; \
-    rm osTicket-plugins.tar.gz; \
-    \
-    cd osTicket-plugins; \
-    php make.php hydrate; \
-    find * -maxdepth 0 -type d ! -path doc ! -path lib -exec mv '{}' \
-        /var/www/html/include/plugins +; \
-    cd ..; \
-    \
-    rm -r osTicket-plugins /root/.composer
-ENV OSTICKET_SLACK_VERSION=cd98e54fcadf1a5dd8e78b0a0380561c7ef29b02 \
-    OSTICKET_SLACK_SHA256SUM=9cdead701fd1be91a64451dfaca98148b997dc4e5a0ff1a61965bffeebd65540
-RUN set -ex; \
-    \
-    wget -q -O osTicket-slack-plugin.tar.gz https://github.com/devinsolutions/\
-osTicket-slack-plugin/archive/${OSTICKET_SLACK_VERSION}.tar.gz; \
-    echo "${OSTICKET_SLACK_SHA256SUM}  osTicket-slack-plugin.tar.gz" | sha256sum -c; \
-    tar -xzf osTicket-slack-plugin.tar.gz -C /var/www/html/include/plugins --strip-components 1 \
-        osTicket-slack-plugin-${OSTICKET_SLACK_VERSION}/slack; \
-    rm osTicket-slack-plugin.tar.gz
 COPY root /
 CMD ["start"]
 STOPSIGNAL SIGTERM
