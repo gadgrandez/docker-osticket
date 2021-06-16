@@ -73,19 +73,19 @@ v${OSTICKET_VERSION}/osTicket-v${OSTICKET_VERSION}.zip; \
     echo "${OSTICKET_SHA256SUM}  osTicket.zip" | sha256sum -c; \
     unzip osTicket.zip 'upload/*'; \
     rm osTicket.zip; \
-    mv upload /var/www/html; \
     #mkdir /usr/local/src; \
     #mv upload /usr/local/src/osticket; \
     # Hard link the sources to the public directory
     #cp -al /usr/local/src/osticket/. /var/www/html; \
     # Hide setup
-    rm -r /var/www/html/setup; \
-    \
+    #rm -r /var/www/html/setup; \
+    #\
     for lang in ar az bg ca cs da de el es_ES et fr hr hu it ja ko lt mk mn nl no fa pl pt_PT \
         pt_BR sk sl sr_CS fi sv_SE ro ru vi th tr uk zh_CN zh_TW; do \
-        wget -q -O /var/www/html/include/i18n/${lang}.phar \
+        wget -q -O upload/include/i18n/${lang}.phar \
             https://s3.amazonaws.com/downloads.osticket.com/lang/${lang}.phar; \
     done
+    mv upload /var/www/html; \
 COPY root /
 CMD ["start"]
 STOPSIGNAL SIGTERM
