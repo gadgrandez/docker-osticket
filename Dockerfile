@@ -1,7 +1,5 @@
 FROM php:7.4-fpm-alpine
 
-VOLUME /var/lib/osticket
-
 RUN set -ex; \
     \
     export CFLAGS="-Os"; \
