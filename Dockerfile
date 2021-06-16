@@ -84,8 +84,8 @@ v${OSTICKET_VERSION}/osTicket-v${OSTICKET_VERSION}.zip; \
         pt_BR sk sl sr_CS fi sv_SE ro ru vi th tr uk zh_CN zh_TW; do \
         wget -q -O upload/include/i18n/${lang}.phar \
             https://s3.amazonaws.com/downloads.osticket.com/lang/${lang}.phar; \
-    done
-    mv upload /var/www/html; \
+    done; \
+    mv upload /var/www/html;
 COPY root /
 CMD ["start"]
 STOPSIGNAL SIGTERM
