@@ -3,9 +3,10 @@
 set -e
 
 # Automate installation
-php /usr/local/src/osticket/setup/install.php
+php /var/www/html/setup/install.php
 echo Applying configuration file security
 chmod 644 /var/www/html/include/ost-config.php
+rm -rf /var/www/html/setup
 
 mkdir -p /run/nginx
 chown -R www-data:www-data /run/nginx
